@@ -1,0 +1,19 @@
+name: RUN
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: npm install
+
+      - uses: ./
+        with:
+          CLICKUP_TOKEN: ${{secrets.TOKEN}}
+          LIST_ID: ${{secrets.LIST_ID}}
