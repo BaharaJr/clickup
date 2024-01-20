@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import github from '@actions/github'
+import * as github from '@actions/github'
 import { Context } from '@actions/github/lib/context'
 
 const CLICKUP_TOKEN = core.getInput('CLICKUP_TOKEN')
