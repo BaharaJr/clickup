@@ -24737,7 +24737,7 @@ const CLICKUP_TOKEN = core.getInput('CLICKUP_TOKEN');
 const LIST_ID = core.getInput('LIST_ID');
 const MESSAGE = core.getInput('MESSAGE');
 const ASSIGNEES = core.getInput('ASSIGNEES');
-const STATUS = core.getInput('STATUS') ?? 'DONE';
+const STATUS = core.getInput('STATUS') || 'DONE';
 const CLICKUP_API = 'https://api.clickup.com/api/v2/list';
 /**
  * The main function for the action.
