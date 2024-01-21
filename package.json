@@ -1,16 +1,16 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
+  "name": "clickup",
+  "description": "Action to automate clickup tasks creation",
   "version": "0.0.0",
-  "author": "",
+  "author": "Bennett Benedict",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://github.com/BaharaJr/clickup",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/BaharaJr/clickup.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://github.com/BaharaJr/clickup/issues"
   },
   "keywords": [
     "actions",
