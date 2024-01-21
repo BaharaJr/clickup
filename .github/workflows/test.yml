@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build
-        run: npm install
+        run: npm install && npm run bundle
 
       - uses: ./
         with:
