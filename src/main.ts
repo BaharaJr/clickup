@@ -42,7 +42,8 @@ export const run = async (): Promise<void> => {
       body
     })
 
-    await response.json()
+    response = await response.json()
+    console.log(response)
     // Set outputs for other workflow steps to use
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {
