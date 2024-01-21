@@ -20,7 +20,7 @@ inputs:
   ASSIGNEES:
     description: 'Task assignees'
     required: true
-  STATUS:
+  TASK_STATUS:
     description: 'Task status'
     required: true
 
