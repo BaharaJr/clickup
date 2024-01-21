@@ -24758,6 +24758,7 @@ const run = async () => {
             start_date: Date.now() - 2 * 60 * 60 * 1000,
             start_date_time: false
         });
+        console.log(body);
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', CLICKUP_TOKEN);

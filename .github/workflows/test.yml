@@ -17,3 +17,4 @@ jobs:
         with:
           CLICKUP_TOKEN: ${{secrets.TOKEN}}
           LIST_ID: ${{secrets.LIST_ID}}
+          MESSAGE: github.event.head_commit.message
