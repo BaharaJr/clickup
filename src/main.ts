@@ -1,12 +1,9 @@
 import * as core from '@actions/core'
-import * as github from '@actions/github'
-import { Context } from '@actions/github/lib/context'
 
 const CLICKUP_TOKEN = core.getInput('CLICKUP_TOKEN')
 const LIST_ID = core.getInput('LIST_ID')
+const MESSAGE = core.getInput('MESSAGE')
 const CLICKUP_API = 'https://api.clickup.com/api/v2/list'
-const { context = {} as Context } = github
-const { message } = context?.payload?.head_commit
 
 /**
  * The main function for the action.
@@ -18,9 +15,9 @@ export const run = async (): Promise<void> => {
     core.debug(new Date().toTimeString())
 
     const body = JSON.stringify({
-      name: message,
-      description: message,
-      markdown_description: message,
+      name: MESSAGE,
+      description: MESSAGE,
+      markdown_description: MESSAGE,
       assignees: [49309403],
       status: 'OPEN',
       priority: 2,
