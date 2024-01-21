@@ -17,6 +17,12 @@ inputs:
   MESSAGE:
     description: 'Commit message'
     required: true
+  ASSIGNEES:
+    description: 'Task assignees'
+    required: true
+  STATUS:
+    description: 'Task status'
+    required: true
 
 runs:
   using: node20

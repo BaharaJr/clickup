@@ -3,6 +3,8 @@ import * as core from '@actions/core'
 const CLICKUP_TOKEN = core.getInput('CLICKUP_TOKEN')
 const LIST_ID = core.getInput('LIST_ID')
 const MESSAGE = core.getInput('MESSAGE')
+const ASSIGNEES = core.getInput('ASSIGNEES')
+const STATUS = core.getInput('STATUS') ?? 'DONE'
 const CLICKUP_API = 'https://api.clickup.com/api/v2/list'
 
 /**
@@ -18,8 +20,8 @@ export const run = async (): Promise<void> => {
       name: MESSAGE,
       description: MESSAGE,
       markdown_description: MESSAGE,
-      assignees: [49309403],
-      status: 'OPEN',
+      assignees: (ASSIGNEES || '').split(',').map(assignee => Number(assignee)),
+      status: STATUS,
       priority: 2,
       due_date: new Date().valueOf(),
       due_date_time: false,
@@ -27,8 +29,6 @@ export const run = async (): Promise<void> => {
       start_date: Date.now() - 2 * 60 * 60 * 1000,
       start_date_time: false
     })
-
-    console.log(body)
 
     const headers = new Headers()
     headers.append('Content-Type', 'application/json')
@@ -40,9 +40,7 @@ export const run = async (): Promise<void> => {
       body
     })
 
-    response = await response.json()
-    console.log(response)
-
+    await response.json()
     // Set outputs for other workflow steps to use
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {

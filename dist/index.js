@@ -24736,6 +24736,8 @@ const core = __importStar(__nccwpck_require__(2186));
 const CLICKUP_TOKEN = core.getInput('CLICKUP_TOKEN');
 const LIST_ID = core.getInput('LIST_ID');
 const MESSAGE = core.getInput('MESSAGE');
+const ASSIGNEES = core.getInput('ASSIGNEES');
+const STATUS = core.getInput('STATUS') ?? 'DONE';
 const CLICKUP_API = 'https://api.clickup.com/api/v2/list';
 /**
  * The main function for the action.
@@ -24749,8 +24751,8 @@ const run = async () => {
             name: MESSAGE,
             description: MESSAGE,
             markdown_description: MESSAGE,
-            assignees: [49309403],
-            status: 'OPEN',
+            assignees: (ASSIGNEES || '').split(',').map(assignee => Number(assignee)),
+            status: STATUS,
             priority: 2,
             due_date: new Date().valueOf(),
             due_date_time: false,
@@ -24758,7 +24760,6 @@ const run = async () => {
             start_date: Date.now() - 2 * 60 * 60 * 1000,
             start_date_time: false
         });
-        console.log(body);
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', CLICKUP_TOKEN);
@@ -24767,8 +24768,7 @@ const run = async () => {
             headers: headers,
             body
         });
-        response = await response.json();
-        console.log(response);
+        await response.json();
         // Set outputs for other workflow steps to use
         core.setOutput('time', new Date().toTimeString());
     }
