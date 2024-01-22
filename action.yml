@@ -23,6 +23,9 @@ inputs:
   TASK_STATUS:
     description: 'Task status'
     required: true
+  AUTHOR:
+    description: 'Last commit author'
+    required: true
 
 runs:
   using: node20
