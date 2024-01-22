@@ -24763,6 +24763,7 @@ const milliseconds = () => {
 const run = async () => {
     const author = assignee();
     if (author) {
+        console.log(`✅ CREATING TASK FOR:: ${author} ✅`);
         try {
             if (MESSAGE.includes(':')) {
                 MESSAGE = MESSAGE.split(':')[1];
@@ -24792,11 +24793,14 @@ const run = async () => {
             core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
+            console.log(`🚫 TASK FAILED WITH ERROR : ${error?.message} 🚫`);
             // Fail the workflow run if an error occurs
             if (error instanceof Error)
                 core.setFailed(error.message);
         }
+        return;
     }
+    console.log('❌ USER NOT SET ❌');
 };
 exports.run = run;
 
