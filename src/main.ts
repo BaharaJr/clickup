@@ -44,7 +44,7 @@ export const run = async (): Promise<void> => {
         description: MESSAGE,
         markdown_description: MESSAGE,
         assignees: [author],
-        status: STATUS,
+        status: 'OOPS',
         priority: 2,
         due_date: new Date().valueOf(),
         due_date_time: false,
@@ -57,12 +57,15 @@ export const run = async (): Promise<void> => {
       headers.append('Content-Type', 'application/json')
       headers.append('Authorization', CLICKUP_TOKEN)
 
-      await fetch(`${CLICKUP_API}/${LIST_ID}/task`, {
+      let response = await fetch(`${CLICKUP_API}/${LIST_ID}/task`, {
         method: 'POST',
         headers: headers,
         body
       })
-
+      response = await response.json()
+      console.log(response)
+      if (response.status) {
+      }
       // Set outputs for other workflow steps to use
       core.setOutput('time', new Date().toTimeString())
     } catch (error: any) {
