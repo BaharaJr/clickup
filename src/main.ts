@@ -44,7 +44,7 @@ export const run = async (): Promise<void> => {
         description: MESSAGE,
         markdown_description: MESSAGE,
         assignees: [author],
-        status: 'OOPS',
+        status: STATUS,
         priority: 2,
         due_date: new Date().valueOf(),
         due_date_time: false,
@@ -62,9 +62,9 @@ export const run = async (): Promise<void> => {
         headers: headers,
         body
       })
-      response = await response.json()
-      console.log(response)
-      if (response.status) {
+      const res = await response.json()
+      if (res.err) {
+        console.log(`🚫 FAILED TO CREATE TASK:: ${res.err} 🚫`)
       }
       // Set outputs for other workflow steps to use
       core.setOutput('time', new Date().toTimeString())
