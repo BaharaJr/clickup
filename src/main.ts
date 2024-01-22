@@ -11,7 +11,9 @@ const CLICKUP_API = 'https://api.clickup.com/api/v2/list'
 const assignee = () => {
   try {
     const base64String = atob(ASSIGNEES)
+    console.log(base64String)
     const assignees: any[] = JSON.parse(base64String)
+    console.log(assignees)
     return assignees.find(({ user }) => user == AUTHOR)?.id
   } catch (e) {
     return null
