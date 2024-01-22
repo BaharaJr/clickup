@@ -24739,6 +24739,12 @@ let MESSAGE = core.getInput('MESSAGE');
 const ASSIGNEES = core.getInput('ASSIGNEES');
 const STATUS = core.getInput('TASK_STATUS') || 'DONE';
 const CLICKUP_API = 'https://api.clickup.com/api/v2/list';
+const milliseconds = () => {
+    const minMilliseconds = 30 * 60 * 1000; // 30 minutes
+    const maxMilliseconds = 3 * 60 * 60 * 1000; // 3 hours
+    return (Math.floor(Math.random() * (maxMilliseconds - minMilliseconds + 1)) +
+        minMilliseconds);
+};
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -24757,7 +24763,7 @@ const run = async () => {
             priority: 2,
             due_date: new Date().valueOf(),
             due_date_time: false,
-            time_estimate: 8640000,
+            time_estimate: milliseconds(),
             start_date: Date.now() - 2 * 60 * 60 * 1000,
             start_date_time: false
         });
