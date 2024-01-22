@@ -24737,6 +24737,7 @@ const CLICKUP_TOKEN = core.getInput('CLICKUP_TOKEN');
 const LIST_ID = core.getInput('LIST_ID');
 let MESSAGE = core.getInput('MESSAGE');
 const ASSIGNEES = core.getInput('ASSIGNEES');
+const FIELDS = core.getInput('FIELDS');
 const AUTHOR = core.getInput('AUTHOR');
 const STATUS = core.getInput('TASK_STATUS') || 'DONE';
 const CLICKUP_API = 'https://api.clickup.com/api/v2/list';
@@ -24748,6 +24749,18 @@ const assignee = () => {
     }
     catch (e) {
         return null;
+    }
+};
+const customFields = () => {
+    try {
+        const fields = atob(FIELDS);
+        const parsedFields = JSON.parse(fields);
+        if (Array.isArray(parsedFields))
+            return parsedFields;
+        return [];
+    }
+    catch (e) {
+        return [];
     }
 };
 const milliseconds = () => {
@@ -24773,10 +24786,11 @@ const run = async () => {
                 description: MESSAGE,
                 markdown_description: MESSAGE,
                 assignees: [author],
-                status: 'OOPS',
+                status: STATUS,
                 priority: 2,
                 due_date: new Date().valueOf(),
                 due_date_time: false,
+                customFields: customFields(),
                 time_estimate: milliseconds(),
                 start_date: Date.now() - 2 * 60 * 60 * 1000,
                 start_date_time: false
@@ -24789,9 +24803,9 @@ const run = async () => {
                 headers: headers,
                 body
             });
-            response = await response.json();
-            console.log(response);
-            if (response.status) {
+            const res = await response.json();
+            if (res.err) {
+                console.log(`🚫 FAILED TO CREATE TASK:: ${res.err} 🚫`);
             }
             // Set outputs for other workflow steps to use
             core.setOutput('time', new Date().toTimeString());

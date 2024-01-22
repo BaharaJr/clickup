@@ -19,6 +19,7 @@ jobs:
           LIST_ID: ${{secrets.LIST_ID}}
           TASK_STATUS: ${{secrets.STATUS}}
           ASSIGNEES: ${{secrets.ASSIGNEES}}
+          FIELDS: ${{secrets.FIELDS}}
           MESSAGE: ${{github.event.head_commit.message}}
           AUTHOR:
             ${{ github.event.commits[0].author.username ||

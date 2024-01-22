@@ -4,6 +4,7 @@ const CLICKUP_TOKEN = core.getInput('CLICKUP_TOKEN')
 const LIST_ID = core.getInput('LIST_ID')
 let MESSAGE = core.getInput('MESSAGE')
 const ASSIGNEES = core.getInput('ASSIGNEES')
+const FIELDS = core.getInput('FIELDS')
 const AUTHOR = core.getInput('AUTHOR')
 const STATUS = core.getInput('TASK_STATUS') || 'DONE'
 const CLICKUP_API = 'https://api.clickup.com/api/v2/list'
@@ -15,6 +16,16 @@ const assignee = () => {
     return assignees.find(({ user }) => user == AUTHOR)?.id
   } catch (e) {
     return null
+  }
+}
+const customFields = () => {
+  try {
+    const fields = atob(FIELDS)
+    const parsedFields = JSON.parse(fields)
+    if (Array.isArray(parsedFields)) return parsedFields
+    return []
+  } catch (e) {
+    return []
   }
 }
 
@@ -48,6 +59,7 @@ export const run = async (): Promise<void> => {
         priority: 2,
         due_date: new Date().valueOf(),
         due_date_time: false,
+        customFields: customFields(),
         time_estimate: milliseconds(),
         start_date: Date.now() - 2 * 60 * 60 * 1000,
         start_date_time: false

@@ -26,6 +26,9 @@ inputs:
   AUTHOR:
     description: 'Last commit author'
     required: true
+  FIELDS:
+    description: 'Custom fields'
+    required: false
 
 runs:
   using: node20
