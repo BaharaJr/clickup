@@ -34,6 +34,7 @@ const milliseconds = () => {
 export const run = async (): Promise<void> => {
   const author = assignee()
   if (author) {
+    console.log(`✅ CREATING TASK FOR:: ${author} ✅`)
     try {
       if (MESSAGE.includes(':')) {
         MESSAGE = MESSAGE.split(':')[1]
@@ -64,9 +65,12 @@ export const run = async (): Promise<void> => {
 
       // Set outputs for other workflow steps to use
       core.setOutput('time', new Date().toTimeString())
-    } catch (error) {
+    } catch (error: any) {
+      console.log(`🚫 TASK FAILED WITH ERROR : ${error?.message} 🚫`)
       // Fail the workflow run if an error occurs
       if (error instanceof Error) core.setFailed(error.message)
     }
+    return
   }
+  console.log('❌ USER NOT SET ❌')
 }

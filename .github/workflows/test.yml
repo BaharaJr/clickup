@@ -20,4 +20,6 @@ jobs:
           TASK_STATUS: ${{secrets.STATUS}}
           ASSIGNEES: ${{secrets.ASSIGNEES}}
           MESSAGE: ${{github.event.head_commit.message}}
-          AUTHOR: ${{github.event.commits[0].author.name}}
+          AUTHOR:
+            ${{ github.event.commits[0].author.username ||
+            github.event.commits[0].author.login }}
