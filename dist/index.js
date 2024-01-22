@@ -24745,36 +24745,31 @@ const CLICKUP_API = 'https://api.clickup.com/api/v2/list';
  */
 const run = async () => {
     try {
-        // Log the current timestamp, wait, then log the new timestamp
-        core.debug(new Date().toTimeString());
-        if (MESSAGE.startsWith('clickup:')) {
-            MESSAGE = MESSAGE.substring('clickup:'.length);
-            const body = JSON.stringify({
-                name: MESSAGE,
-                description: MESSAGE,
-                markdown_description: MESSAGE,
-                assignees: (ASSIGNEES || '')
-                    .split(',')
-                    .map(assignee => Number(assignee)),
-                status: STATUS,
-                priority: 2,
-                due_date: new Date().valueOf(),
-                due_date_time: false,
-                time_estimate: 8640000,
-                start_date: Date.now() - 2 * 60 * 60 * 1000,
-                start_date_time: false
-            });
-            const headers = new Headers();
-            headers.append('Content-Type', 'application/json');
-            headers.append('Authorization', CLICKUP_TOKEN);
-            const response = await fetch(`${CLICKUP_API}/${LIST_ID}/task`, {
-                method: 'POST',
-                headers: headers,
-                body
-            });
-            await response.json();
-            // Set outputs for other workflow steps to use
+        if (MESSAGE.includes(':')) {
+            MESSAGE = MESSAGE.split(':')[1];
         }
+        const body = JSON.stringify({
+            name: MESSAGE,
+            description: MESSAGE,
+            markdown_description: MESSAGE,
+            assignees: (ASSIGNEES || '').split(',').map(assignee => Number(assignee)),
+            status: STATUS,
+            priority: 2,
+            due_date: new Date().valueOf(),
+            due_date_time: false,
+            time_estimate: 8640000,
+            start_date: Date.now() - 2 * 60 * 60 * 1000,
+            start_date_time: false
+        });
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', CLICKUP_TOKEN);
+        await fetch(`${CLICKUP_API}/${LIST_ID}/task`, {
+            method: 'POST',
+            headers: headers,
+            body
+        });
+        // Set outputs for other workflow steps to use
         core.setOutput('time', new Date().toTimeString());
     }
     catch (error) {
