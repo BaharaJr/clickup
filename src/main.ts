@@ -30,8 +30,8 @@ const customFields = () => {
 }
 
 const milliseconds = () => {
-  const minMilliseconds = 30 * 60 * 1000 // 30 minutes
-  const maxMilliseconds = 3 * 60 * 60 * 1000 // 3 hours
+  const minMilliseconds = 20 * 60 * 1000 // 20 minutes
+  const maxMilliseconds = 2 * 60 * 60 * 1000 // 3 hours
   return (
     Math.floor(Math.random() * (maxMilliseconds - minMilliseconds + 1)) +
     minMilliseconds
