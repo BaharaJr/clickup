@@ -24740,7 +24740,7 @@ const ASSIGNEES = core.getInput('ASSIGNEES');
 const FIELDS = core.getInput('FIELDS');
 const AUTHOR = core.getInput('AUTHOR');
 const STATUS = core.getInput('TASK_STATUS') || 'DONE';
-const CLICKUP_API = 'https://api.clickup.com/api/v2/list';
+const CLICKUP_API = 'https://api.clickup.com/api/v2';
 const assignee = () => {
     try {
         const base64String = atob(ASSIGNEES);
@@ -24751,7 +24751,7 @@ const assignee = () => {
         return null;
     }
 };
-const customFields = () => {
+const customFieldsSecret = () => {
     try {
         const fields = atob(FIELDS);
         const parsedFields = JSON.parse(fields);
@@ -24764,8 +24764,8 @@ const customFields = () => {
     }
 };
 const milliseconds = () => {
-    const minMilliseconds = 30 * 60 * 1000; // 30 minutes
-    const maxMilliseconds = 3 * 60 * 60 * 1000; // 3 hours
+    const minMilliseconds = 20 * 60 * 1000; // 20 minutes
+    const maxMilliseconds = 2 * 60 * 60 * 1000; // 3 hours
     return (Math.floor(Math.random() * (maxMilliseconds - minMilliseconds + 1)) +
         minMilliseconds);
 };
@@ -24775,6 +24775,7 @@ const milliseconds = () => {
  */
 const run = async () => {
     const author = assignee();
+    const customFields = customFieldsSecret();
     if (author) {
         console.log(`✅ CREATING TASK FOR:: ${author} ✅`);
         try {
@@ -24790,7 +24791,7 @@ const run = async () => {
                 priority: 2,
                 due_date: new Date().valueOf(),
                 due_date_time: false,
-                customFields: customFields(),
+                customFields,
                 time_estimate: milliseconds(),
                 start_date: Date.now() - 2 * 60 * 60 * 1000,
                 start_date_time: false
@@ -24798,12 +24799,23 @@ const run = async () => {
             const headers = new Headers();
             headers.append('Content-Type', 'application/json');
             headers.append('Authorization', CLICKUP_TOKEN);
-            let response = await fetch(`${CLICKUP_API}/${LIST_ID}/task`, {
+            let response = await fetch(`${CLICKUP_API}/list/${LIST_ID}/task`, {
                 method: 'POST',
                 headers: headers,
                 body
             });
             const res = await response.json();
+            if (res?.id && customFields.length) {
+                for (const customField of customFields) {
+                    if (customField.id && customField.value) {
+                        await fetch(`${CLICKUP_API}/task/${res.id}/field/${customField?.id}`, {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({ value: customField.value })
+                        });
+                    }
+                }
+            }
             if (res.err) {
                 console.log(`🚫 FAILED TO CREATE TASK:: ${res.err} 🚫`);
             }
