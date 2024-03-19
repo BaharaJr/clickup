@@ -7,7 +7,7 @@ const ASSIGNEES = core.getInput('ASSIGNEES')
 const FIELDS = core.getInput('FIELDS')
 const AUTHOR = core.getInput('AUTHOR')
 const STATUS = core.getInput('TASK_STATUS') || 'DONE'
-const CLICKUP_API = 'https://api.clickup.com/api/v2/list'
+const CLICKUP_API = 'https://api.clickup.com/api/v2'
 
 const assignee = () => {
   try {
@@ -18,7 +18,7 @@ const assignee = () => {
     return null
   }
 }
-const customFields = () => {
+const customFieldsSecret = () => {
   try {
     const fields = atob(FIELDS)
     const parsedFields = JSON.parse(fields)
@@ -44,6 +44,7 @@ const milliseconds = () => {
  */
 export const run = async (): Promise<void> => {
   const author = assignee()
+  const customFields = customFieldsSecret()
   if (author) {
     console.log(`✅ CREATING TASK FOR:: ${author} ✅`)
     try {
@@ -59,7 +60,7 @@ export const run = async (): Promise<void> => {
         priority: 2,
         due_date: new Date().valueOf(),
         due_date_time: false,
-        customFields: customFields(),
+        customFields,
         time_estimate: milliseconds(),
         start_date: Date.now() - 2 * 60 * 60 * 1000,
         start_date_time: false
@@ -69,12 +70,25 @@ export const run = async (): Promise<void> => {
       headers.append('Content-Type', 'application/json')
       headers.append('Authorization', CLICKUP_TOKEN)
 
-      let response = await fetch(`${CLICKUP_API}/${LIST_ID}/task`, {
+      let response = await fetch(`${CLICKUP_API}/list/${LIST_ID}/task`, {
         method: 'POST',
         headers: headers,
         body
       })
       const res = await response.json()
+
+      if(res?.id && customFields.length){
+        for(const customField of customFields){
+          if(customField.id && customField.value){
+            await fetch(`${CLICKUP_API}/task/${res.id}/field/${customField?.id}`, {
+              method: 'POST',
+              headers: headers,
+              body: JSON.stringify({value: customField.value})
+            })
+          }
+        }
+      }
+
       if (res.err) {
         console.log(`🚫 FAILED TO CREATE TASK:: ${res.err} 🚫`)
       }
