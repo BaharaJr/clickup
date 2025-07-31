@@ -33,3 +33,5 @@ inputs:
 runs:
   using: node20
   main: dist/index.js
+- name: Create ClickUp tasks from commits
+  uses: BaharaJr/clickup@0.0.9
